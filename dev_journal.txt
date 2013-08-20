@@ -1,0 +1,94 @@
+Dev Journal
+===========
+Rino Jose <@rjose>
+
+
+Aug 19, 2013
+------------
+Alright, so what are my options for today? I'm thinking:
+
+        * Update gcat to pull all columns
+        * Sketch out some charts for planning (these should be good demos)
+        * Add ids to columns in text list
+        * Add documentation to shell scripts
+
+Let's start with the charts. These are the most visual and appealing demos. Once
+this is out of the way, we can go deeper. I'll sketch out some thoughts on my
+iPad and go from there.
+
+Sketching out charts
+~~~~~~~~~~~~~~~~~~~~
+So what questions do people want answered? The goal of all of this is to aid in
+decision-making. We want to give a visual indication of where things stand. We
+want to be able to zoom in to understand a specific area. Here are some
+ideas/thoughts:
+
+        * How much work is scheduled? What does demand look like by different
+          groupings (e.g., track, product manager, team)? How far are we short?
+          What's fully resourced, and what's not.
+                ** I'm thinking of the "shortage charts" here with an option to
+                   click to show the details of the chart
+
+        * What are the big priority 1s? What is their impact relative to other
+          number 1s?
+                ** I'm thinking of a 4 quadrant chart here.
+
+        * Show chart of resource availability.
+
+        * What are the cross-team dependencies? Are there any priority
+          conflicts? Can we generate a rough timeline based on overall team
+          members (this wouldn't have specific assignments yet).
+
+Alright, should I do the easy ones first, or the hard ones? Well, I want to at
+least look at the directed graphs. Let's try this first.
+
+Implementation
+~~~~~~~~~~~~~~
+Alright, here's my plan for the rest of today:
+
+. Create simple dag chart [X][][][][]
+. Create angular directive for d3 element [][][][][][]
+. Create the quadrant chart [][][][]
+
+
+1 - Create simple dag chart
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+I'll start by looking for a quick demo. I'll just go with the "force layout"
+example in the "Interactive Data Visualization" book. First, I'll wire things up
+so I can trigger the draw...Done! Next, I'll follow along. OK, I was able to get
+this to work, but I'm wondering if we just need to lay out nodes similar to the
+quadrant chart, adding colors as needed. Let's come back to this after we have
+more experience with the other charts.
+
+
+2 - Create angular directive for d3 element
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The reason I'm doing this is to get back into having angular be what's
+coordinating the page flow. I think we should be able to create things like
+"demo_quadrant" and have it just work. I'll have to review the angular docs
+again first. I'll create a chart module. OK, I set up a directive called
+"quadrantdemo" that will construct a quadrant chart. This is how I'll figure out
+what data I'll need for this. Let's follow along with a demo to get things set
+up. Alright, I got a simple plot to render. Let's check this in. OK, now let's
+add a scale next. After that, we can add the quadrants. For the quadrants, we
+just need to draw some lines. Done. Next, let's add some meta information that
+can be shown on click. We should have angular render this. Done.
+
+For tomorrow
+~~~~~~~~~~~~
+Here's some stuff to think about for tomorrow.
+
+. Add axis labels and title to quad chart
+. Render metadata from quad chart
+. Create resource availability chart [][][]
+. Create spreadsheets with data
+
+.Some thoughts
+What if we let people manipulate the live feed and have it be broadcast to
+everyone else?
+
+We might want the server to store the current live feed data so new clients can
+see it, too. That's an enhancement for later.
+
+I want to revise how charts.js works so that we can swap out the various chart
+types on demand.
