@@ -1,10 +1,7 @@
-Dev Journal
-===========
+Aug 19, 2013
+============
 Rino Jose <@rjose>
 
-
-Aug 19, 2013
-------------
 Alright, so what are my options for today? I'm thinking:
 
         * Update gcat to pull all columns
@@ -17,7 +14,7 @@ this is out of the way, we can go deeper. I'll sketch out some thoughts on my
 iPad and go from there.
 
 Sketching out charts
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 So what questions do people want answered? The goal of all of this is to aid in
 decision-making. We want to give a visual indication of where things stand. We
 want to be able to zoom in to understand a specific area. Here are some
@@ -43,7 +40,7 @@ Alright, should I do the easy ones first, or the hard ones? Well, I want to at
 least look at the directed graphs. Let's try this first.
 
 Implementation
-~~~~~~~~~~~~~~
+--------------
 Alright, here's my plan for the rest of today:
 
 . Create simple dag chart [X][][][][]
@@ -52,7 +49,7 @@ Alright, here's my plan for the rest of today:
 
 
 1 - Create simple dag chart
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 I'll start by looking for a quick demo. I'll just go with the "force layout"
 example in the "Interactive Data Visualization" book. First, I'll wire things up
 so I can trigger the draw...Done! Next, I'll follow along. OK, I was able to get
@@ -62,7 +59,7 @@ more experience with the other charts.
 
 
 2 - Create angular directive for d3 element
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The reason I'm doing this is to get back into having angular be what's
 coordinating the page flow. I think we should be able to create things like
 "demo_quadrant" and have it just work. I'll have to review the angular docs
@@ -74,8 +71,15 @@ add a scale next. After that, we can add the quadrants. For the quadrants, we
 just need to draw some lines. Done. Next, let's add some meta information that
 can be shown on click. We should have angular render this. Done.
 
+I think we want an umbrella LiveContentCtrl that can activate the appropriate
+view for the given message. It should use a websocket service to handle
+messages. We should just create an svg element explicitly as well as a pre
+element for raw output. The controller should ideally set the view type (raw,
+quadrant, etc.) and data. 
+
+
 For tomorrow
-~~~~~~~~~~~~
+------------
 Here's some stuff to think about for tomorrow.
 
 . Add axis labels and title to quad chart
@@ -83,7 +87,8 @@ Here's some stuff to think about for tomorrow.
 . Create resource availability chart [][][]
 . Create spreadsheets with data
 
-.Some thoughts
+Some thoughts
+~~~~~~~~~~~~~
 What if we let people manipulate the live feed and have it be broadcast to
 everyone else?
 
