@@ -1,0 +1,86 @@
+Aug 21, 2013
+============
+Rino Jose <@rjose>
+
+Today, we'll move to using websockets to send chart data. We'll remove our
+buttons and let everything happen over websockets. I'll also finish up the
+release chart and take a swing at the shortage chart.
+
+Worklist
+--------
+. Hook up raw broadcast [X][]
+. Hook up websockets for charts [X][][]
+. Finish release chart [X][X][X][]
+. Create shortage chart [][][][][][]
+. Note issues regarding communication of status [][]
+
+
+1 - Hook up raw broadcast
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Let's start by creating a websocket connection within the LiveViewCtrl. We'll
+look for the raw command first...Done. Now let's change our scope around a
+little (since it's chart-specific right now). We'll change chart to "data" and
+add a type. OK, we can send raw text to the live view. Let's check this in.
+
+
+2 - Hook up websockets for charts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OK, at this point, we should do the same thing we did for raw data but for
+charts. The trick is defining the format of the messages. I think we should have
+the command be "chart" and then specify the chart data in the "chart" field. We
+may need to make the "has ext prereq" stuff more like metadata that the chart
+directive won't know about. The visual formatting should be done by the shell
+scripts. Just to start, we'll send the same data for now and then tweak it
+towards this. We'll hardcode the data into a python script. OK, let's remove the
+quad chart button and (and function) and checkin.
+
+OK, next up is hooking up the release chart data. I think we should hold off on
+this until we finish the release chart. Let's consider this step done for now
+and move this work into the next step.
+
+
+3 - Finish release chart
+~~~~~~~~~~~~~~~~~~~~~~~~
+Review link:http://bl.ocks.org/mbostock/4061502[box chart] example to see how to
+build components. Should do this for the date ranges. Let me sketch out how this
+chart should look. Let's change our data around a little bit. We'll have release
+dates and we'll have target "bands", which have an expected finish date and a
+target. It would be nice if we could change the chart dimensions on demand. OK,
+I've figured out how to create a composite "band" element. Let's check this part
+in. Let's add an axis. OK, the axis is in place. Let's add lines for the release
+bars.
+
+Let's try adding the gridlines for release dates. Alright, some rudimentary
+gridlines are in place. OK, here's what we need to do to finish this off:
+
+        - Put a box around the release groups and supply a label
+        - Put a box around the full chart
+        - Resize the chart to the appropriate height
+        - Come up with a reasonable way to figure out y positions
+        - Add display of metadata for groups
+
+Not sure I'll get to all of these things, but let's just pick up from where we
+were and see how far we can get.
+
+.Rethinking the above
+Actually, thinking about this some more, I think it's officially gotten too
+complicated. Let's just show release dates, feature bands and feature titles.
+We'll filter by whatever we're interested in upstream. Alright, added feature
+labels and drew a box around the chart.
+
+The last thing I want to add is the ability to resize the svg area depending on
+the chart data. Is this possible? Yes, just use svg.attr("height", 200).
+Alright, the last thing we'll do today is to simplify the data. Done! Let's
+check this in. Alright, let's remove the original releaseChart function and
+we'll be done.
+
+
+For tomorrow
+------------
+. Replace live.html with charts.html
+. Split chart functions into separate files
+. Create shortage chart
+. Create demo scripts for charts (TDD)
+. Revise gcat to pull all columns
+. Add spreadsheets with data
+. Document shell scripts

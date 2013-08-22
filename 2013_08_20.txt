@@ -1,0 +1,73 @@
+Aug 20, 2013
+============
+Rino Jose <@rjose>
+
+What's on tap for today? I want to take another look at how I've been using
+angular. I don't think I need to create my own directive. Let's define things in
+the DOM and hide them if we don't need them. The controller can set this based
+on the type of item being displayed. We can start with that and then think about
+the right place to put the code to update the charts. This code needs to work
+with the scope; not sure who should be responsible for it.
+
+Worklist
+--------
+. [X] Come up with strategy for showing charts [X][X][X]
+. [X] Figure out how to render chart metadata [X][][][]
+. Create feature release chart [][][][]
+. Add spreadsheets with some data [][][]
+
+1 - Come up with strategy for showing charts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, let's focus on the HTML structure first and make sure this makes sense.
+I'll do this from the perspective of a "live" controller and then rename the
+files later. OK, the right way to do this is to have the controller set data in
+the scope when some event happens (like button click or a websockets message).
+The "chart" directive needs to update the DOM when the scope changes. The
+"chart" directive should know how to render different types of charts.
+
+
+2 - Figure out how to render chart metadata
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This should be pretty straightforward. What we want is to set some data in the
+scope when one of the elements is clicked. Not sure if we want to show all
+elements in the quadrants or show all elements that have certain attributes. I
+suppose that could be follow up messages that are broadcast to an information
+area of the chart. Let's just get something set up for now that we can change
+later. OK, can do this. The only question is can we render meta data in a
+generic way (and who should package this). Let's check this in now.
+
+
+3 - Create feature release chart
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, let's create a feature release chart. We'll want groupings (like by
+track). We'll want features with an expected release and a promised release.
+This should reflect risk. We should also have release bars for each grouping.
+This is like the packaged release date. We may want to represent this as a range
+to take QA testing into account.
+
+To start, let's add a release chart button and hook it up to the controller.
+Done. Now, let's add some data to render. Alright, at this point I can add the
+drawReleaseChart function. Let's iterate over each group to start. We'll have
+each feature be in its own row, so we should place these as we go. Once we have
+this, we'll set up a date scale.
+
+Alright, let's set up a date scale. I'll start by collecting all dates and then
+setting this as the domain. OK, I have a scale now. Next up is gathering the
+data and rendering release bands...Done! Actually, now that I'm looking at this,
+I think I'll change the release bands back into lines and then have the target
+dates of each feature sit on that line. We'll pick this up tomorrow.
+
+
+For tomorrow
+------------
+I think we should work on getting the websockets hooked up so I can cat chart
+data over. We should be able to cat all of the various types of charts. We
+should also be able to cat information into the auxiliary info area.
+
+. Hook up websockets
+. Finish release chart
+. Figure out how to render data in a generic way
+. Create shortage chart
+. Create cross team dependency chart
+. Hook up raw broadcast
+. Add spreadsheets with data
