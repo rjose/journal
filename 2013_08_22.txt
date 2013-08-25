@@ -1,0 +1,72 @@
+Aug 22, 2013
+============
+Rino Jose <@rjose>
+
+We'll start today off with a little cleanup and refactoring. I guess I'll create
+a refactor branch from my "make_charts" branch. After that, I'd like to create a
+shortage chart to show work demand and net supply. After that, I'd like to sweep
+through the shell scripts and test data to tighten things up for a demo. 
+
+Worklist
+--------
+. [X] Replace live.html with charts.html [X]<X>
+. [X] Split chart functions into separate files [X][X]
+. [X] Create shortage chart [X][X][X][X][X][]
+
+
+1 - Replace live.html with charts.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Basically, I want to get rid of the current version of "live.html" and replace
+it with what I've been doing for charts. Before we overwrite these files, I'll
+bring the pie chart over...Alright, I've moved the pie charts over. Let's check
+this in. OK, the last step here is to move the charts files over to the "live"
+files. Done!
+
+2 - Split chart functions into separate files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, the next bit of refactoring will be to split the chart functions out
+into separate files. I think I'll make a charts directory and put them in there.
+At some point we'll need to minify these for a "real" deployment, but for now
+this is good enough. OK, I've finished piechart and release chart. Alright,
+let's finish this off by splitting off quadchart. Done!
+
+
+3 - Create shortage chart
+~~~~~~~~~~~~~~~~~~~~~~~~~
+What we want here is a donut chart whose area represents the amount of resource
+allocated to the items in the donut. The hole represents the additional resource
+demanded. The metadata for the donut and the hole should be work items in each
+set. Partially funded work items should be in the hole. The hole should also be
+a pie chart showing required skill distribution. If there is surplus, the chart
+should invert. If we're showing multiple charts in one view, the size of the
+charts should be relative to the work estimates.
+
+Let's start by copying piechart and then hardcoding some data. Done. To add
+shortage data, I suppose we just need to add a shortage object with skills. The
+chart will need to figure out how big to make the inner pie chart. For now, I'll
+just center it with a fixed radius. Let's add a function called drawDonut and
+one called drawHole. OK, I was able to get something working here. The only
+issue was centering. Let's see if I can figure this out. Got it. Let's check in.
+I'll check this into a "shortagechart" branch and then merge it back in when
+done.
+
+OK, next up is getting the radii computed properly. The outer radius will be
+determined by the chart size. Alright, the inner radius is the outer radius *
+sqrt(total shortage/total demand). Done! Let's check in and then try handling
+the other cases. Done! OK, the last thing for today will be write a script that
+can send shortage chart data. Done!
+
+
+Thought: Do we always want to show labels for the inner pie chart? Will there be
+a threshhold? Should we scale the font down?
+
+For tomorrow
+------------
+- Render auxiliary data from shortage chart
+- Write pipeline for storage charts
+- Add spreadsheets with data
+- Note issues regarding communication of status [][]
+- Create demo scripts for charts (TDD) [][][][]
+- Document shell scripts
+- Revise gcat to pull all columns [][][]
+- Rename broadcast functions to "bc"

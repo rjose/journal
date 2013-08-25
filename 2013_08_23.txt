@@ -1,0 +1,48 @@
+Aug 23, 2013
+============
+Rino Jose <@rjose>
+
+Let's start today with some simple renaming. I want to abbreviate as much as
+possible. We'll start with the broadcast functions and go from there.
+
+Worklist
+--------
+- [X] Rename broadcast functions [X][X]
+- [X] Write pipeline for storage charts [X][X][X][X]
+
+
+1 - Rename broadcast functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What I want to do here is replace all of the broadcast functions with a single
+function called bcast that can take different options. To do this, we'll need to
+add a python module for the broadcast types. Let's start with piechart since we
+have data we can cat to it. Done. As we do the shortage chart, I'd like to do
+some TDD on this.
+
+First, let's try to do some commandline arg parsing in python. Looks like
+there's an
+link:http://docs.python.org/2/library/argparse.html#module-argparse[argparse
+module] that may do what I want. Let's start with this. Done.
+
+While we're at this, let's collapse all of the broadcast functions in the same
+way. We'll do raw next. Done!
+
+2 - Write pipeline for storage charts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The first step is moving the storage chart into a python module. After that,
+I'll set up a unit test for it. Hmmm. I think the format text functions should
+be renamed to be parse text and they should return python dictionaries. The
+bcast file should convert the python dictionary into JSON. Alright, let's
+rewrite bcast to take a python dictionary. Done!
+
+Alright, I got the rest of the charts moved over to being cat-able. Let's merge
+this back down and push it to origin.
+
+
+For Monday
+----------
+- Revise gcat to pull all columns [][][]
+- Add spreadsheets with data
+- Document shell scripts
+- Render auxiliary data from shortage chart
+- Note issues regarding communication of status [][]
