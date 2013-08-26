@@ -1,0 +1,109 @@
+Aug 26, 2013
+============
+Rino Jose <@rjose>
+
+Today, we'll do some porting and cleanup. I want to get the scripts ready to
+do Q4 planning. I should check on the wiki that people put together for Q3 (I
+think this had themes, etc on it). We should add those items to the
+spreadsheet.
+
+I also want to take a crack at adding IDs to all items. This will be important
+for the multi-team planning. Thinking about multi-team planning, what we want
+to show is how effort is aligned along the key metrics and OKRs. Not sure how
+to represent the OKRs yet. We'll need a different kind of websocket channel
+for the multi-team app. I'd like to get something running this week.
+
+
+Worklist
+--------
+- [X] Port QPlan to desktop
+- [X] Revise gcat to pull all columns [X]
+- [X] Generate list of items missing from Q3 [][][]
+
+1 - Port QPlan to desktop
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Just installed Python 3 and we're done.
+
+
+2 - Revise gcat to pull all columns
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, let's start by reverting gcat to a state where I can pull all columns
+in one shot. Once this is in place, I'll grab the status spreadsheet that Sara
+is maintaining. Done! Let's check this in.
+
+
+3 - Generate list of items missing from Q3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, what do we want to do here? Let's grab the original Q3 data and the
+status data. I'll add IDs for each line so we can group these. What goes into
+the report? We want to organize these by track. We want to show items that
+were originally planned and items we expect to be done. We should have a
+separate report of the items that won't make it into Q3. We want our track
+leads to figure out which of these should go into Q4.
+
+What are some things I need to do? I need to decode the track names. I need to
+note items that are new with respect to the plan. I want to store track,
+merged priority, name from the original spreadsheet. That sounds like one awk
+filter. I want to store track, name, status from the second spreadsheet.
+
+So what should these reports look like? Here's what's in and out.
+
+-----
+        == Track: Contacts
+        -- Expected
+        #125 1 Task name
+        **  ** Added task name
+
+        -- At risk
+
+        -- Planned but missed
+        #101 1.5 Task that won't make it
+-----
+
+Here are candidates for Q4
+
+-----
+        == Track: Contacts
+        #117 1 Task name
+        **  ** Added task name
+-----
+
+How can we implement the first report? The first spreadsheet should give us
+something like a database. The second should give us in and out. We interpret
+de-scoped as out. Blocked means "at risk".
+
+OK, I'll put the first report into a function and then set up the second
+report which generates the backlog. I need to pull from the Q3 plan and the
+items that won't make it from the status spreadsheet. So what do we want? We
+want all items from status that are out. We also want all items from Q3 that
+are not done.
+
+Let's check in what we have and then add some arg parsing. Tomorrow, we should
+clean up the functions.
+
+
+
+4 - Create multi-team planning app
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What questions are we trying to answer? How about:
+
+        - What are other teams working on?
+                - Zoom in
+        - Is my dependency in the plan?
+                - Is it a priority?
+                - When will it be done?
+        - How are teams lined up on key initiatives?
+        - Where are the resource risks?
+        - Where are the schedule risks?
+        - Where are the priority inversions?
+
+
+
+For Tomorrow
+------------
+- Create multi-team planning app [][][][][][]
+- Document shell scripts
+- Add scripts that can stack and unstack streams
+- Debug status script
+- Clean up status script
+- Sketch out talks
