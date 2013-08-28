@@ -1,0 +1,76 @@
+Aug 27, 2013
+============
+Rino Jose <@rjose>
+
+Today, we'll do some porting and cleanup. I want to get the scripts ready to
+do Q4 planning. I should check on the wiki that people put together for Q3 (I
+think this had themes, etc on it). We should add those items to the
+spreadsheet.
+
+I also want to take a crack at adding IDs to all items. This will be important
+for the multi-team planning. Thinking about multi-team planning, what we want
+to show is how effort is aligned along the key metrics and OKRs. Not sure how
+to represent the OKRs yet. We'll need a different kind of websocket channel
+for the multi-team app. I'd like to get something running this week.
+
+
+Worklist
+--------
+- [X] Start creating multi-team planning app
+- [X] Attend Austin standup at 10am and take notes
+- [X] Attend Scrooge standup at 10:45 and take notes
+- [X] Touch base with Tomer on metrics eval spreadsheet
+
+
+
+1 - Create multi-team planning app
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What questions are we trying to answer? How about:
+
+        - What are other teams working on?
+                - Zoom in
+        - Is my dependency in the plan?
+                - Is it a priority?
+                - When will it be done?
+        - How are teams lined up on key initiatives?
+        - Where are the resource risks?
+        - Where are the schedule risks?
+        - Where are the priority inversions?
+
+I think this is one level up from each team's quarterly planning (though, it's
+really part of it). I want to show shortage charts for each team. I want some
+way to show dependencies between teams. I want some way to show disagreements
+in priority. I want some way to show when things should be done. We may be
+able to do a rough estimate of this based on the rankings. Let me sketch out a
+thought. OK, I think I have an idea of what I want to build. It seems like I
+should be able to put a lightweight spec together for this now.
+
+.Transition on click
+Here's what I'm thinking about when transitioning on click. We should go from
+an array of shortage charts to a view that shows dependencies between what we
+clicked on and the other shortage charts. An HTML view should also come into
+the picture showing a list of things that are in and out as well as the
+dependencies. Prereqs that are unfunded in other teams should be highlighted
+in red. Unfunded work items that other teams need should also be highlighted
+in red.
+
+image:mqplan1.jpg[width=700]
+
+.Closeup on detail view
+image:mqplan2.jpg[width=700]
+
+.Getting started
+Let's get started by creating a new mqplan repo. We'll need to include qplan
+as a subtree to re-use parts from it. I'll start a new lightweight spec to
+capture the ideas I've listed out here.
+
+For Tomorrow
+------------
+- Attend Felix standup at 11:15 and take notes
+- Write script that can do diff on status spreadsheet
+- Write script that adds ids to work items
+- Document shell scripts
+- Add scripts that can stack and unstack streams
+- Debug status script
+- Clean up status script
+- Compute an optimism coeff for Q3
