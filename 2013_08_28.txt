@@ -1,0 +1,24 @@
+Aug 28, 2013
+============
+Rino Jose <@rjose>
+
+Today, I want to continue working on mqplan. Let's get a simple layout to
+work. I was thinking of doing this using TDD, but maybe I should just get
+something to work and then circle back when it's irritating to set up the
+test.
+
+
+Worklist
+--------
+. Work on mqplan
+
+For Tomorrow
+------------
+- Attend Felix standup at 11:15 and take notes
+- Write script that can do diff on status spreadsheet
+- Write script that adds ids to work items
+- Document shell scripts
+- Add scripts that can stack and unstack streams
+- Debug status script
+- Clean up status script
+- Compute an optimism coeff for Q3
