@@ -1,0 +1,30 @@
+Aug 30, 2013
+============
+Rino Jose <@rjose>
+
+I want to get to a point where we can hook mqplan data up to our server, but I
+think I want to rework qplan and mqplan to use the same server. We just need a
+way to configure the server to point to a lua root and to listen on a specific
+port. I would rather have one server per app instance even though technically,
+we could run several apps on one.
+
+If we can get to this point, I can extract the server code out into its own
+repo and simplify both the qplan and mqplan repos. I wonder if we should
+rename this to be a cat server. Maybe I'll call it catserve or csrv? I think I
+like catserve the best. Let's create a new repo for this and start moving the
+qplan server stuff over to it.
+
+
+Worklist
+--------
+
+For Tomorrow
+------------
+- Attend Felix standup at 11:15 and take notes
+- Write script that can do diff on status spreadsheet
+- Write script that adds ids to work items
+- Document shell scripts
+- Add scripts that can stack and unstack streams
+- Debug status script
+- Clean up status script
+- Compute an optimism coeff for Q3
