@@ -1,0 +1,16 @@
+Catserve Plan
+=============
+Rino Jose <@rjose>
+
+
+Sep 3, 2013
+-----------
+Let's start by just deleting code from qplan. Before I check in, I want to be
+able to run my sample scripts (QPlan app and the live broadcasts). The root
+diretory that we'll pass to catserve is ~/products/qplan/server. I need to
+rename app/qplan.lua to app/init.lua. Hmmm...I have some changes related to
+having gcat returning all columns. I think I'll check that in later.
+Actually, let's create a branch and put the current changes into it. That way,
+we can remove catserve in one commit and then add the other changes after.
+I'll call this branch re_filter (this should go into v6 as well). OK,
+everything looks good.
