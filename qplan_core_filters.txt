@@ -1,0 +1,45 @@
+QPlan Core Filters
+==================
+Rino Jose <@rjose>
+
+Sep 3, 2013
+-----------
+I want to be able to compile Haskell code on my tower. I guess the best way to
+do this is to install the ghc platform. Let's start with "yum install ghc". I
+may need cabal as well. OK, it looks like this is installed. Let's see if we can
+get cabal going. Let's install cabal next. Alright, I got cabal installed. I
+also got the qplan filter to build and run. Awesome!
+
+Let's document the SkillAmount file and then write a simple filter that outputs
+a list of the tracks and then the work items with name and skills required.
+We'll also need to add tests for SkillAmount. Done!
+
+Alright, I think we can head into Work now and try to parse out each line.
+
+Sep 4, 2013
+-----------
+For today, let's gcat the planning spreadsheet into a file and then get it
+into a form that the qplan filter will understand (i.e., stacked stream with a
+"Work" header and data in the expected format). The fields are:
+
+        id, name, estimate, triage, track, team, value, prereqs
+
+Let's write a python filter that takes the raw work output from the q3
+spreadsheet into one with a Work header. We'll call this q3_to_qplan.py. This
+script should convert a "Raw Work" stream into a "Work" stream. Alright, now
+that we have the work stream, let's pipe it into qplan and have it parse the
+work items, group by track, and then print something out. Done!
+
+Alright, I want to clean up the code so I don't have to qualify everything. I
+may need to clean it up some more after this, but let's try this first.
+Actually, let's see if we can emit some JSON first. The clean up stuff I can
+do at home. OK, here's how you create JSON:
+
+        let x = [("work", name work), ("track", track work)]
+        encode x -- This encodes the argument literally
+        encode $ toJSObject x -- This encodes the above as a JSON object 
+
+TODO: Figure out where to document Work header/format
+TODO: Document the output of sectionize a bit
+TODO: Document Work.hs
+TODO: Rename all "fromString" so we don't have conflicts
