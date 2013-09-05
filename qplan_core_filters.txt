@@ -39,7 +39,14 @@ do at home. OK, here's how you create JSON:
         encode x -- This encodes the argument literally
         encode $ toJSObject x -- This encodes the above as a JSON object 
 
+Let's start refactoring by renaming fromString. I may need to redo all of this
+when I find a more Haskell-y way of doing this. Done.
+
+Now, let's document Work.hs.
+
+After this, we'll move the filters to their own files. Each filter strategy
+should be in its own file, I think. Common code should be moved into a common
+file. Done!
+
 TODO: Figure out where to document Work header/format
-TODO: Document the output of sectionize a bit
-TODO: Document Work.hs
-TODO: Rename all "fromString" so we don't have conflicts
+TODO: Check that we can handle "Raw Work" stream by default
