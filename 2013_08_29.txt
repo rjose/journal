@@ -1,0 +1,30 @@
+Aug 29, 2013
+============
+Rino Jose <@rjose>
+
+Today, I want to get mqplan to a state where I can demo it. That means we need
+to get data into it and display some auxiliary info. Let's do a really simple
+layout for now and focus on getting the data hooked up.
+
+Worklist
+--------
+
+- [X] Push mqplan work to github dev branch
+- Add layout algorithm for selected chart
+- Add hash frag to page for selected chart
+- Add ajax call to server for selected chart
+- Update mqplan with data
+- Push mqplan work back to github
+- Get Q4 items collected and a first cut at value
+
+
+For Tomorrow
+------------
+- Attend Felix standup at 11:15 and take notes
+- Write script that can do diff on status spreadsheet
+- Write script that adds ids to work items
+- Document shell scripts
+- Add scripts that can stack and unstack streams
+- Debug status script
+- Clean up status script
+- Compute an optimism coeff for Q3
