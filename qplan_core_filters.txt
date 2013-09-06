@@ -91,3 +91,11 @@ One thought I just had was that we shouldn't really sort things until the end
 TODO: Figure out where to document Work header/format
 TODO: Check that we can handle "Raw Work" stream by default
 TODO: Also rework the qplan app in a more proper form
+
+Sep 6, 2013
+-----------
+Let's start simple by making estimates into a better Show instance. After that,
+we'll add the staff and net availability calculations to the QPlan filter. We
+should also add the weeks left to the python script and send that as a stream.
+Once this works, we should hook it up to the qplan app. Once that works, we
+should merge everything down into v6_branch and clean up any dead files.
