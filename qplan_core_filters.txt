@@ -127,7 +127,10 @@ should be able to zip the work items against the available manpower to
 generate this.
 
 Alright, the last step is to compute the net demand and net avail by track and
-triage.
+triage. How should we approach this? We already have available manpower. All
+we need to do is compute the demand. However, we have to do this in a way that
+sums along the triage dimension. Sounds like another job for scanl. Maybe we
+could use another applicative functor?
 
 
 TODO: Need to condition tracks from the work spreadsheet a little better
