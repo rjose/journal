@@ -48,5 +48,46 @@ After this, we'll move the filters to their own files. Each filter strategy
 should be in its own file, I think. Common code should be moved into a common
 file. Done!
 
+Sep 5, 2013
+-----------
+Alright, what I want to do next is make sure the sample filter works with the
+standard work stream. I'll do this:
+
+        cat _q3mobile.txt | q3mobile_to_qplan.py | qplan
+
+It works! So, what I want to do next is to go back up to the qplan app and
+change the endpoint to point to something new. Then, I'll figure the data we
+need to upload. The goal is to simplify the work that the server needs to do.
+The main qplan filter needs to provide data in a form that doesn't require
+much computation.
+
+We'll also need to bring the staff data over at some point, but for now, let's
+just work with the Work data. We'll mock out anything we don't have and circle
+back to this. Alright, I hooked up the route. Let's start mocking stuff out
+and then working backwards. OK, I was able to mock up some data. Let's see how
+we handle selecting different triage values next. That will help us pick a way
+to organize the data. Alright, I'm done! Here's what we'll need to do:
+
+        - [X] Create list of all tracks
+        - [X] Create list of work items by track
+        - Create list of staff by track and skill
+        - Create staffing stats by track and triage
+
+Let's try getting something put together in Haskell with just work data and
+then bring in the staff data. For the cases where we want all combinations, we
+should try using lists as monads.
+
+Let's look at getting a list of work items by track. The original work list
+should go into "All". For the rest, we should be able to use our track list to
+generate a nondeterministic result. Wait a minute. We already have work by
+track. We just need to sort the items and add the original work list. Done.
+
+Now, we need to convert this into a JSON object. We need to store the
+following fields: estimate, feasible, name, rank, track, triage
+
+One thought I just had was that we shouldn't really sort things until the end
+(or until we need them).
+
 TODO: Figure out where to document Work header/format
 TODO: Check that we can handle "Raw Work" stream by default
+TODO: Also rework the qplan app in a more proper form
