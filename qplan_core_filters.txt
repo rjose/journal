@@ -99,3 +99,39 @@ we'll add the staff and net availability calculations to the QPlan filter. We
 should also add the weeks left to the python script and send that as a stream.
 Once this works, we should hook it up to the qplan app. Once that works, we
 should merge everything down into v6_branch and clean up any dead files.
+
+Alright, let's start with Estimate. Done! Alright, the next thing we should do
+is add the staff computation. We need to break staff up by track (including
+All) and compute skill supply assuming a certain number of weeks. We need to
+break staff up by track and skill.
+
+OK, after much mental effort, I've been able to split staff by skill and
+track. Before we can proceed, let's condition the work tracks a bit better and
+also add the "All" staff set. Done! OK, since we're so close, let's set up to
+return the staff lists. To do this, we'll write a function to convert a person
+into a JSON value. Done! Let's check this in and then move to the staff stat
+computation.
+
+Alright, let's do some staff computation next. We need to do a couple of
+things here. Here's what we need to do:
+
+        - [X] Compute available staff by track and skill
+        - [X] Compute available manpower by track and skill
+        - [X] Compute net availability by work items in track
+        - Compute skill demand and net avail by track and triage
+
+To compute the net availability, we should do a foldl over the work items
+using the available supply for that track. The result will be a list of
+feasbile flags for each work item if any of the demanded work is negative. We
+should be able to zip the work items against the available manpower to
+generate this.
+
+Alright, the last step is to compute the net demand and net avail by track and
+triage.
+
+
+TODO: Need to condition tracks from the work spreadsheet a little better
+TODO: Go to camelcase for Haskell
+TODO: Use a convention for using "'" for naming
+TODO: Sort staff before returning
+TODO: Come up with strategy for record accessors
