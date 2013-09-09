@@ -1,0 +1,25 @@
+QPlan Server
+============
+Rino Jose <@rjose>
+
+Sep 7, 2013
+-----------
+We should rename the old endpoint and then commandeer it. First goal is just
+receiving the data. After that, we'll need to parse the JSON and set up the data
+within lua.
+
+I did a little sneak peek at this and loaded the q3.json file in a lua shell.
+Was able to decode the json and access the info from lua. I think this should ge
+pretty smoothly.
+
+We'll just cat q3.json over. Done.
+
+OK, let's get the staffing stats rendered first. We'll do it in terms of
+manpower and then convert to people. We'll need the number of weeks. We'll also
+need to handle zero weeks left. Done!
+
+NOTE: I had to do this to deal with a quote char:
+
+        cat q3.json| sed s/\'//g | curl -X POST -d @- http://localhost:8888/qplan
+
+Not sure if this is a curl thing.
