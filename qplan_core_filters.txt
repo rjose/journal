@@ -132,9 +132,70 @@ we need to do is compute the demand. However, we have to do this in a way that
 sums along the triage dimension. Sounds like another job for scanl. Maybe we
 could use another applicative functor?
 
+OK, I can compute the skill demand for a set of work. Now, let's group work by
+triage. Done. Now, let's get work with all triages. Done! Now, we can just sum
+all of the demand for each of them. Done. Now, let's compute net avail.
 
-TODO: Need to condition tracks from the work spreadsheet a little better
-TODO: Go to camelcase for Haskell
-TODO: Use a convention for using "'" for naming
-TODO: Sort staff before returning
-TODO: Come up with strategy for record accessors
+Alright, let's generate a complete JSON result. We'll get all fields in. We want
+to have an object with tracks as keys and objects as values. The values should
+have the following keys:
+
+        - total
+        - demand -> array by triage
+        - net avail -> array by triage
+
+Aargh! Let's try to clean this file up before we go on. There's too much
+happening here. We need to push some of it back down to other files. We need to
+manage the complexity.
+
+Sep 7, 2013
+-----------
+Today, we'll start by computing track demand. This is the required manpower for
+each track, cumulative by triage. Let's start by writing the main function for
+this and then the subfunctions. The main getTrackDemand should take trackWork. I
+guess that's all it needs. Actually, if we'll be working with straight floats,
+we'll also need to pass the skills in to order the demand values. Done!
+
+OK, what do we need next? Now, we need net availability. To do this, we just
+subtract the trackDemand from the manpower. Done! The last computation before we
+get into JSON render is the feasibility. What do we want here? We want to start
+with the manpower for a track and the track items and do a scanl subtracting off
+work item demand at each step. Once we have this list, we'll need to check for
+each work item if any of required skills is negative. If so, it's not feasible.
+Done!
+
+OK, the last thing we need to do is to construct a JSON response. I think we
+should start with the parent object and work downwards. First step is adding
+tracks and skills. After that, we need to add staffing stats for each track.
+This should have total, demand, net by triage. Done!
+
+Alright, we have two more things to render. The first is our trackStaff. The
+second is our trackWork. Done! Actually, we also have to add the "is feasible"
+field to work.
+
+OK, one last thing before we leave our Haskell filter. Let's comment our code a
+bit. After this, we'll create an endpoint in the qplan server for reading the
+data in. Then we'll revise the angular code to pick this up (I also want to
+clean up this code). I'll also see if I can add a shortage chart to the UI.
+
+Actually, tomorrow I'll start a new file that's focused on working with the
+data. I'll call this "qplan_server".
+
+.Thoughts
+One thing I'm noticing in this rewrite is moving more towards assuming the lists
+have an order by track or skill and just operating on the lowest level data. For
+instance, using Floats instead of SkillAmount. This seems simpler.
+
+NOTE: It was *extremely* useful to have a test function that read in a file as
+if from a stream:
+
+-----
+test = do
+        content <- readFile "_qplan.txt"
+        let result = filterString content
+        putStr result
+-----
+
+It was also *extremely* useful to change the return value from the filter
+function based on what we were currently working on.
+
