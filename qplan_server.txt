@@ -23,3 +23,54 @@ NOTE: I had to do this to deal with a quote char:
         cat q3.json| sed s/\'//g | curl -X POST -d @- http://localhost:8888/qplan
 
 Not sure if this is a curl thing.
+
+Sep 9, 2013
+-----------
+Let's take this step-by-step.
+
+        . cat mobile_q3.ini | gcat.py > _q3_mobile.txt
+        . cat _q3_mobile.txt | q3mobile_to_qplan.py > _qplan.txt
+        . cat _qplan.txt | qplan > q3.json
+        . catserver -r=server -p=8888
+        . cat q3.json | sed s/\'//g | curl -X POST -d @- localhost:8888
+
+Found the issue with the json parsing. The new version on my tower (0.9.50)
+had a problem. Went back to older version (0.9.40). This seems to be the weak
+link right now.
+
+Alright, let's see if we can get v6_branch cleaned up. The first thing I want
+to do is scrub through all of our lua code.
+
+.Action Items
+- [X] Scrub lua modules
+- [X] Revise angular code to make it cleaner
+- [X] Scrub shell scripts
+- [X] Update README
+
+- Add shortage chart
+- Add history/hash frag URLs
+- Add chart data render to qplan
+- Note scripts for doing broadcasts
+- Start mqplan filter and pipe track info to it
+- Move bcast functionality to qplan
+- Add weeks left to python script for creating qplan data
+- Add reading of weeks left in Haskell (and writing to JSON)
+
+- Add spec for stream types
+- Rename stream headers
+
+Let's start by scrubbing the server/app files. I want to get rid of all of the
+filtering logic. I'm going through router. We need to delete plan.lua. OK, now
+going through update_router. Need to get rid of person.lua and work.lua Go
+through broadcast router and request router. Do a grep for req.plan. Done!
+
+.Clean up angular code
+Alright, let's make our angular code cleaner. We'll reference mqplan to do
+this. Done!
+
+
+.Perf improvement
+Looking at the perf improvement of the pre-computed data using Haskell vs the
+compute on the fly. Looks like we're twice as fast now from a latency
+perspective. Time to render Contacts went from 8ms to 4ms. For All tracks, it
+went from 21 ms to 13 ms.
