@@ -46,18 +46,19 @@ to do is scrub through all of our lua code.
 - [X] Revise angular code to make it cleaner
 - [X] Scrub shell scripts
 - [X] Update README
+- [X] Rename stream headers
+- [X] Add spec for stream types
+- [X] Add history/hash frag URLs
 
-- Add shortage chart
-- Add history/hash frag URLs
-- Add chart data render to qplan
+- [X] Add shortage chart
 - Note scripts for doing broadcasts
 - Start mqplan filter and pipe track info to it
 - Move bcast functionality to qplan
+
 - Add weeks left to python script for creating qplan data
 - Add reading of weeks left in Haskell (and writing to JSON)
+- Update qplan-v6.txt
 
-- Add spec for stream types
-- Rename stream headers
 
 Let's start by scrubbing the server/app files. I want to get rid of all of the
 filtering logic. I'm going through router. We need to delete plan.lua. OK, now
@@ -68,9 +69,39 @@ through broadcast router and request router. Do a grep for req.plan. Done!
 Alright, let's make our angular code cleaner. We'll reference mqplan to do
 this. Done!
 
+.Clean up stream headers
+Alright, let's rename the headers and document them in a github spec. Done!
+
+OK, I think we're ready to pull things down to master. Before we do this,
+let's tag master at v5-9. OK, I checked this into master and pushed. Also
+tagged this as v6-0.
 
 .Perf improvement
 Looking at the perf improvement of the pre-computed data using Haskell vs the
 compute on the fly. Looks like we're twice as fast now from a latency
 perspective. Time to render Contacts went from 8ms to 4ms. For All tracks, it
 went from 21 ms to 13 ms.
+
+.Add history/hash frags
+Let's study the mqplan angular code and bring this over to qplan. We need to
+store track and triage in the url. This needs to override the default track
+and triage.
+
+Let's start by watching for changes to the URL. Done. Now, let's try to decode
+the hash frag. I think we need to change the update mechanism so it goes off
+of the URL vs being called directly. Let's add a function that can render a
+given url. Done!
+
+.Add shortage chart
+I think we have all the data we need for the shortage chart. Let's see if we
+can add a chart to our qplan page. I think I'll start by looking at live.html
+and live.js.
+
+I'm going to just add the chart to the page and then style it later. OK, got a
+chart rendered with some dummy data. Let's see if we can hook up some data.
+
+For tomorrow
+~~~~~~~~~~~~
+Let's focus on scheduling work in time next. We won't assume any assignments.
+We will assume that work can be broken down into 2 week chunks. We'll need to
+port the Python scheduling code.

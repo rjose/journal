@@ -1,0 +1,155 @@
+Scheduler
+=========
+Rino Jose <@rjose>
+
+The scheduling algorithm needs to lay work out in time. The goal is to estimate
+start and end dates for each work item given a set of assigned staff with
+availability information for each person.
+
+For different situations, there may be different flavors of scheduling. For
+instance, for quarterly planning, we may not know the actual work assignments.
+We'll need to make assumptions about how work can be allocated and scheduled.
+For instance, we may assume that apps, native, and web work can proceed in
+parallel, but QA must take place afterwards. In the case of sprint planning, we
+will know specific people assigned to each task and can lay work out explicitly
+based on their schedules and the task dependencies.
+
+For the implementation strategy, we should focus on the quarterly planning
+algorithms first and then see what we can abstract.
+
+Sep 10, 2013
+------------
+In addition to the "qplan work v1" and "qplan staff v1" streams, we'll need an
+availability/unavailability stream. What's better to send? Probably
+unavailability. At this level, we'll figure out total unavailable days for each
+person and subtract that off from total manpower. We'll need to convert this to
+manweeks.
+
+What are some assumptions?
+
+        - For each work item:
+                - Apps, Native, and Web can proceed in parallel
+                - BB and SET can proceed in parallel, but after any apps,
+                  native, and web work
+
+        - The scale on an estimate indicates how many people can work on the
+          task at once. For instance, 3S means that 3 people can work at the
+          same time on the task for 1 weeks, whereas L means that only one
+          person can work on the task at once for a total of 3 weeks.
+
+        - A team with 4 people in a skill group has 4 slots available for
+          scheduling.
+
+        - We can lay work out along available workdays, but we'll need a way to
+          map the workdays back into dates. How about we divide the unavailable
+          days into 3 and pack those days at the end of each month?
+
+Alright, so what are some of the tricky parts of this?
+
+        - Parsing dates
+        - Deciding what's a weekend
+        - Counting unavailable days
+        - Laying work into slots
+
+We should write the work layout function in general terms so we can apply it to
+generic slots or slots with people in them.
+
+Fitting this together
+~~~~~~~~~~~~~~~~~~~~~
+OK, so how will all of this fit together? Construct a list of dates, one per day
+in the quarter -- this will be an index for everything dealing with dates. Next,
+let's focus in on one track (not the "All" track) since the process will be the
+same. For each person in a skill group, define list of Int corresponding to each
+day in the quarter: 0 means not available. We need to understand what days are
+weekends and which dates are unavailable (there may be some interesting things
+we do with the unavailability lists). Sum all of these lists by skill group to
+get an availability list for each day in the quarter.
+
+The next step is to lay work out. For each work item, we need to split the
+required skills into two groups: [apps, native, web] and [BB, SET]. We could
+then lay work out in parallel and across for each group. The latest date for the
+apps should be the earliest date for the QA (actually, we could use this for the
+first group as a state pattern). I'll have to think about this one a bit. At the
+end, we should have dev complete and QA complete dates for each work item. This
+should be a new data type.
+
+At this point, we can arrange work by theme, by track, or anything else that we
+can group by in the work items.
+
+Implementation
+~~~~~~~~~~~~~~
+Let's start by creating an availability list for the quarter. Let's just put
+this under Filters and call it "Schedule.hs". Alright, I have my test function
+set up. Let's start with an Availability type. We'll need to parse dates and
+do some date computation. Alright, was able to parse dates and do date
+arithmetic. What's next? Let's see if we can construct a list of days to use
+as an index. Done! Next, let's add holidays. I'll assume we have a list of
+days instead of date ranges. Done.
+
+OK, the next thing we need to do is compute availability by person. We should
+have an augmented staff stream that includes out of office days. The python
+script that conditions data should add this. We should update the Person type
+to add this. After we do this, let's add a list of People and then map a
+function that takes people into available days.
+
+After this, let's write a function that adds availability (this should just be
+a fold with a zip). Actually, before we do this, I think workdays should be a
+pair of (Day, Bool). Let's make that change first. OK, now let's compute
+availability. Done! I'm feeling like I should check in. Let's create a
+schedule_branch and add it there. Done!
+
+OK, let's figure out how to lay work out using an availability list. I think
+we want to send the state down as we go. We'll have to update the Work type.
+We'll need a dev complete date and a QA complete date. These should be of type
+Maybe Day since they may be understaffed. After we add these dates to Work,
+let's think about the function signature. Actually, thinking about this some
+more, I think the dev and QA complete dates should be separate from Work and
+added on as a pair.
+
+Hmmm...this is still not cool. The crux is that we have dependencies that
+we're not handling yet. Until we do, let's just have the python scripts filter
+out the QA work for the purposes of scheduling.
+
+OK, to lay out work, we'll need to compute manpower from a set of skills (that
+we'll need to look up). This might be the time when we start sharing code
+between the filters. For now, let's hardcode the skills list. OK, what we need
+is something like (2, 3.0) meaning this will take 2 people working for 3 weeks
+each. This functionality should go into SkillAmount. Done! I have a vague
+feeling that I'm hacking stuff up a little, but I'll keep going.
+
+To work out the next part, I think I need to sketch some things out. We'll
+have to pass the new availability lists down in a State Monad-like way.
+Alright, this is interesting enough to do some TDD on. Let's add a
+TestSchedule file and start running!
+
+Thought: It would be nice to set up a Haskell compute server
+
+TODO: Add parsing of holidays in Person. Also add holidays to output (and
+input) of python script.
+
+
+Sep 11, 2013
+------------
+Alright, I took another look at the State Monad and I think this is the right
+thing to use. I just need to define the state. The result of the stateful
+computation should be a new date. The state should be a list of Days, a list
+of skill availabilities (by days), and a list of earliest starting points for
+each skill availability. We should probably define a new type for this and
+then cast the scheduleWorkItem computation as a State-ful computation. OK, I
+have a frame of something working. What I want to do next is to map this
+stateful computation over an array of work items and gather their results.
+Done! That's pretty awesome.
+
+OK, now we can code up our function that schedules a work item. We should be
+ready to go after that. This will require some TDD to get right. Let's start
+by pulling the function definition out as its own function. Hmmm. It seems
+like I need another State monad to do the consumption calculation. Nah, just
+needed to write a recursive function and pass the state down.
+
+Alright, this is probably the heart of the algorithm. The next step is to map
+"consume" across all skills and take the maximum index. If any is Nothing, the
+result should be Nothing.
+
+It seems to work! Let me see if I can clean up the test so I can run different
+scenarios easily. I think I need different tests and then variations within
+each test.
