@@ -152,4 +152,58 @@ result should be Nothing.
 
 It seems to work! Let me see if I can clean up the test so I can run different
 scenarios easily. I think I need different tests and then variations within
-each test.
+each test. Done!
+
+OK, the next thing we'll do before cleaning code up is to see if we can tie the
+track scheduling together. If we can do some TDD on this, we should clean up and
+spend tomorrow pulling data together. Hmmm..not quite there yet. We need to do
+some of the same stream manipulations here as we did for the main QPlan filter.
+I'll pick this up tomorrow. We may be able to share some code between the
+filters.
+
+One thing we should do this time around is print stacked streams instead of JSON
+(for both filters, actually). We should write some lua code that can pull the
+streams apart. We should document these streams as well on github. We should
+probably just emit the scheduling data along with the main QPlan data. We'll
+tackle all of this tomorrow. We'll have to specify skills to schedule for as
+well.
+
+Sep 12, 2013
+------------
+Let's start by pulling the functions in the Schedule filter over to QPlan and
+see if we can construct our input data properly. We need to add the ability to
+parse out of office days. Let's do some TDD on Person to make sure this comes
+out right. Done! OK, now, let's update our q3mobile script to add vacation days
+(at least a slot for them). Now, let's see if we can read in people with
+vacations. Done!
+
+OK, now let's see if we can construct SkillAvailability for each track. How
+should I do this? For each of the trackStaff elements, I could filter the skill
+groups according to a skill list and then return a list of skill availabilities
+associated with each group. Let's give this a try. OK, I've hooked it up other
+than filtering the skills to schedule out. Let's run it to see if it looks ok.
+Looks good! Let's write the filter function next. Done!
+
+One thing that I'm doing is skipping the first element of trackStaff and
+trackWork since that contains the "All" track. I want scheduling to be done by
+track.
+
+Alright, now that we have availabilities by track, we should be able to schedule
+track work. We'll need to construct a SchedAvail for each track and then just
+run the work items across it. Done! Let's check this in.
+
+OK, the next thing I want to do is to get the q3mobile script to generate the
+correct stream info (at least mocked up) so we can clean out the QPlan haskell
+code. Done.
+
+Now, let's see if we can generated some stacked streams. I think we'll need to
+do nested streams. Done!
+
+Alright, for tomorrow, let's do the following:
+        - Write lua code to unstack streams
+        - Write lua code to parse qplan output
+        - Try to pull vacation info in
+
+TODO: Add new spec for streams
+TODO: After the dust clears, we'll need to rename our functions and do general
+cleanup.
