@@ -207,3 +207,9 @@ Alright, for tomorrow, let's do the following:
 TODO: Add new spec for streams
 TODO: After the dust clears, we'll need to rename our functions and do general
 cleanup.
+
+Sep 13, 2013
+------------
+OK, I got the parsing implemented. Let's hook this up to the upload route and
+check that we got something. OK, hooked this up to parsing. Let's start
+hooking this up to the UI.

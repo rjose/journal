@@ -1,0 +1,27 @@
+Q4 Scrub
+========
+Rino Jose <@rjose>
+
+- Is merged triage used being used yet? If not, we should clear the column.
+  This should be what we ultimately use to indicate what's in and out.
+- Mobilize needs estimates (Ganesh)
+- Work should be sorted in priority order in spreadsheet (by triage first)
+
+- Felix needs work items (take from Conan? Merge with other track?)
+- Relationships needs staff
+- SRE needs a track
+
+- Merged Rapportive into Intros
+
+
+- Money needs estimates
+- Remove empty tablet task
+
+Planning Sequence
+-----------------
+. Ensure work is estimated
+. Ensure work is sorted in priority order
+. Look at triage 1 for each track. What fits, what doesn't.
+. Redefine tracks and recondition data
+. Look at where things land
+. Group by theme. Add buffer for ramp plan.
