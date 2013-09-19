@@ -1,0 +1,29 @@
+2013-09-18
+==========
+Rino Jose <@rjose>
+
+Next Steps
+----------
+There's a couple of ways I can go. I can keep going along the multi-team
+planning route. I can start implementing the mobile public ramp timeline. I'll
+probably need to work with Sara on this. I could also focus on the things that
+were giving me the most grief around data quality (columns moving, fields with
+invalid data, etc.). There's also trying to hook into JIRA to get more tracking
+data.
+
+Probably the very next step is to get more robust in our data handling. This is
+the thing with the most pain right now. After that, I can start thinking about
+the rampline app. Is that a good name for it? I guess I can run with this for
+now.
+
+What about making it easy to start and run one of these servers? We may need to
+bundle code up.
+
+Rampline
+--------
+I should create a separate repo for this, I think. This should drive the sharing
+of code between qplan. We need to estimate dev complete dates for each item and
+then group into product, theme, and month. Somewhere, we should have a ramp plan
+for each feature. We need to draw from this. I think this is the first time I'll
+need to create IDs for work items. Maybe this can be in JIRA? I'll have to ask
+Sara or Linzhen.

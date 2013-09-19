@@ -1,0 +1,42 @@
+Conditioning Scripts
+====================
+Rino Jose
+<@rjose>
+
+Here are some of the main problems I've run into:
+
+        * Column added or removed
+        * Invalid data in cell
+
+Here are some things I want to add/extract:
+
+        * Override start and end dates from the commandline
+        * [X] Pack an estimate string
+        * [X] Condition string values
+        * [X] Condition triage
+        * [X] Date parsing/formatting
+        * [X] Vacation handling (supply hook for conditioning vacation data)
+        * [X] Condition cell values
+        * [X] Check for all streams up front
+        * [X] Handle column movement
+        
+
+I also want to structure the conditioning scripts a bit better so I can easily
+re-use the functions from one version of a spreadsheet to another.
+
+Most of the code in the script should be custom code that understands the
+quirks of the input data.
+
+Implementation
+--------------
+Alright, so what's the best way to do this? Let's add section checks first and
+then pull the printing code out into functions and then call them. When this
+works, let's start pulling common functions out into modules. After that,
+let's add column checks.
+
+Alright, let's create a conditioning module and add pack string...Done! Next,
+let's condition string values.
+
+OK, last topic here is handling column movement. How will we do this? We need
+to specify the *exact* column header to look for. We need to generate a
+mapping of column header to column index. Done!
