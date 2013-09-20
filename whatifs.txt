@@ -1,0 +1,73 @@
+What-ifs
+========
+Rino Jose <@rjose>
+
+We need to handle "what if" scenarios. What would be nice to have?
+
+        - Perform "what if" scenarios in the client
+        - Scenarios are local to the client and do not affect the state of the
+          server
+        - You should be able to see what you've changed
+        - Reloading the web page should not destroy what you've done
+        - The server should store what you've done someplace
+        - The computations should take place asynchronously. It should be
+          obvious that the app is working on something.
+        - You should be able to share your scenarios with others.
+
+OK, there's a lot going on with this. Is there a way I can prototype any of it?
+
+If we want the state to be preserved, we'll need to write it to disk at some
+point. We'll also need to know who the data is associated with. This is starting
+to feel complicated. Maybe we can just store the state in a cookie or in local
+storage. How big can a cookie be? It looks like 4K. I suppose we could have
+multiple cookies, but then the state is tied to the browser that the user is on.
+I suppose we could let the browser display all the cookies with state to
+everyone. This is still feeling a little complicated. For instance, what if the
+entire server state is updated? What happens to the validity of the cookie? Is
+there some way to have changes be tied together and consistent? Who should
+broker the state?
+
+Could we somehow use git as our database for state? Or maybe we just compute the
+SHA for each stream and send that to the server? That way we could tie cookies
+to state. I suppose we could use git to store the history. Should we store the
+changesets in git as well? The cookies could just be SHAs into git. Or maybe
+they could be pairs of SHAs (one for the server state and one for the
+changeset).
+
+Let's assume we can manage our state and the changset. How would we use this to
+compute new state? I suppose we could send both to a qplan filter and get new
+state back out. This would have to be tied to the cookie. So would we need 3
+SHAs? One for the base state, one for the changeset, and one for the new state?
+Missing the new state SHA would imply that the new state would have to be
+recomputed.
+
+OK, how about the case where I start on one device and then move to another? It
+would be nice if I could specify my name or email and then see my changesets and
+everything I was doing. I suppose you could have multiple changesets at one
+time? We'd have to name them and associate them with a user. Where would that be
+stored? How could I look up changesets by user? I suppose we could literally
+just have a file with all changesets in it. The file could be named by user. We
+might even want to display the names of all files so people can view each
+others' changesets.
+
+Hmmm...I think there's a partial idea here. What would I need to do to try it
+out? How about this:
+
+. Construct a changeset
+. Apply a changeset to a state
+. Look up changesets for each user
+. Share changesets
+. Show how main state changes relative to changeset (git commits)
+. Compute new state
+
+
+.Computing new state
+Let's think about computing new state. Assuming we had a format for the
+changeset, we could have a script that could overlay changes on top of the base
+state. Maybe we do a straight substitution of rows. That would actually be very
+clean. In order to do this, we'd need IDs for each row item (person, work item,
+etc.). What about the actual computation of state? I assume we'd need to pipe
+the original input along with the change set into qplan and have it generate a
+new qplan state. This state would have to be comitted into git. This would
+happen in the context of a web request. The response should be the new state.
+The browser should store the new state, the base state, and the changeset.

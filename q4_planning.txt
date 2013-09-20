@@ -1,0 +1,12 @@
+Q4 Planning
+===========
+Rino Jose, <@rjose>
+
+TODO: Email Sara about adding Ben
+TODO: Condition data with null tracks
+TODO: Tell people to set triage
+TODO: Ask about staff for Intro and Relationship (should be Contacts team I
+think)
+
+TODO: Write a script to identify issues to correct
+
