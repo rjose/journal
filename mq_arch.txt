@@ -1,0 +1,127 @@
+MQ Architecture
+===============
+Rino Jose <@rjose>
+
+I think a message queue architecture is the way to go for this family of
+planning and tracking tools. We should have listeners that record snapshots of
+history. We should have cron jobs that initiate pulls of data from sources of
+truth. We need workers that can pull current state and what-ifs to respond
+with a new state.
+
+Who should maintain state? For instance, in a qplan server, the state is
+served from lua to web clients. For "what ifs" is this where state is pulled
+from, or should it be pulled from a snapshot service? I don't think it can be
+pulled from the sources of truth because:
+
+        * The latency in the requests can be very long
+        * The data may not be in a consistent state
+
+Concerns
+--------
+One thing I'm concerned about is that this will start getting too complicated.
+There will be too many pieces that need to be running in order for any of this
+to run. What I like about the current setup is that there's one server that
+you send data to from a unix pipeline. That's it. Super simple. However, this
+won't handle "what ifs" properly. It also doesn't handle multiple qplan
+instances running together that need to share data.
+
+What are the pieces that are *absolutely* required? How about this:
+
+        * Sources of truth (like Google Docs and JIRA)
+        * Conditioning scripts
+        * Application filters (like the qplan script that tallies and
+          schedules work)
+        * Web UI server to display results and perform whatifs
+        * Data snapshot service for tracking and analysis
+        * Message queue system
+
+
+NOTE: The web UI server only interacts with users. It does *not* interact with
+other servers.
+
+
+Scenarios
+---------
+Suppose we started with these six types of things. Can we handle all of the
+scenarios that we need to for planning and tracking? Let's sketch some out and
+see how it looks. 
+
+
+Scenario 1: Pull qplan data and show to users
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The first thing that happens is that a script is run that pulls data from the
+sources of truth and publishes it into the message queue. The script could be
+run manually or via a cron job.
+
+A snapshot service gets the message and commits this to the raw data
+snapshots.
+
+A conditioning service also gets the message. It conditions the data and then
+publishes this to the message queue.
+
+A snapshot gets the conditioned data and saves it.
+
+An application filter sees the conditioned data and generates results for each
+case it handles.
+
+A snapshot filter gets the results and snapshots them.
+
+The web UI sees new results and updates its state. The web UI server needs to
+have the SHA of the raw, conditioned, and result data.
+
+When users refresh, they see the new view.
+
+.NOTES
+What happens when there is bad data? The conditioning script must not publish
+bad data (if it knows that it's bad). It needs to raise some kind of error
+message that we might monitor from some admin panel.
+
+Is this simpler or more complicated than a unix pipeline? Should the
+conditioning scripts be part of the snapshot service? Maybe.
+
+There should be one snapshot service for each app.
+
+How should the data be organized? What is the directory structure? Can we
+guarantee this won't change (at least for the life of the app)?
+
+
+Scenario 2: Handle "what ifs"
+-----------------------------
+User brings up qplan view and wants to see what happens if the planning range
+is changed. They make the change from the UI.
+
+The web server publishes the change (along with the SHA of the current data).
+
+An application filter sees the message, pulls the conditioned data from the
+snapshot service, applies the change and then generates a new result which it
+publishes to the message queue as a reply.
+
+The web server returns this and updates the view.
+
+.NOTES
+Q. How will the user know they are in a "what if" view?
+
+Q. How will a user get out of a "what if" view?
+
+Q. How will a user apply their "what if" changes?
+
+Q. Will "what if" changes be persisted anywhere? Should this be done using
+local storage until thrown away or saved?
+
+Q. How will the SHA of the current data be communicated to the user? Where
+does it come from? Obviously, the snapshot service constructs this, but where
+in the flow does it come from?
+
+
+Scenario 3: Excavation
+----------------------
+Suppose a year has gone by and we wanted to look back at how this particular
+quarter had gone. What would be required to excavate the data and app?
+
+We'd need to fire up the snapshot service (suppose the service script lived in
+this repo). We'd also have to fire up the web server. The webserver could
+request the HEAD data and just start running. That would be pretty nice if
+that's all it took.
+
+Should the webserver also be part of the repo? I dunno. This seems wrong to
+me.

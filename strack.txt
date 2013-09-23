@@ -1,0 +1,27 @@
+STrack
+======
+Rino Jose <@rjose>
+
+Alright, I was able to pull JIRA data! I'll have to figure out the sprints and
+the boards, but I should be able to get some structured data to tie into
+tracking. What information would be good to show?
+
+        - Estimated completion dates for each task
+        - Thread this up to completion dates for project line items
+        - Would be nice to show what's a planning estimate and what's from
+          JIRA
+        - Can also combine JIRA data with vacation data
+        - Can show what's slipping
+        - Can show who's doing what
+        - Can show activity chart (who's doing what when)
+        - Can show what's done and what's left
+        - Can show deltas from week-to-week and from current to quarter plan
+        - Can show activity by theme (like a heat map)
+
+What's the flow look like? Maybe like this:
+
+        . cat board and sprint keys into jiracat to get incomplete/complete
+          tasks for each active sprint
+        . Combine this with data from the quarter plan and vacations
+
+TODO: Think about git and data persistence

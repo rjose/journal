@@ -1,0 +1,114 @@
+Snapshot Service
+================
+Rino Jose <@rjose>
+
+Let's create a snapshot service repo for the general snapshot code. Actual
+snapshot services will use the code from here but in their own git repos.
+
+We'll start by writing a python script that uses the 0mq bindings. I want to
+stub out responses to figure out what a protocol might look like.
+
+Alright, I installed zmq for python2.6. The simple server/client demo work.
+
+Implementation
+--------------
+. cat raw data into a snapshot message [X][X][][]
+. Get raw data at HEAD and SHA [X][X][][]
+. Publish PUT events
+. Clean up functions
+
+
+1 - cat raw data into a snapshot message
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Let's create a snapshot service that lives on 5000. Messages are stacked
+streams. Actually, let's create a client first that constructs a stacked
+stream from cat'd data. Done.
+
+Now, let's write this data into a file from the server and commit it to the
+repo. Done!
+
+
+2 - Get raw data at HEAD (and SHA)
+~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, now let's see if we can get data from the HEAD. There must be a way
+to ask git for the version of a file at the head of the master branch. OK,
+this is how you do it:
+
+        - git show HEAD:raw/qplan.txt
+
+To get a particular version, use this:
+
+        - git show 0eb4a:raw/qplan.txt
+
+Alright, this is pretty neat. To get the actual data, what should we do? We
+can send a message like this:
+
+        . =====GET raw qplan
+
+This will return the data at the HEAD. If we wanted to get a particuar
+version, we could do this:
+
+        . =====GET raw qplan
+        . \t0eab4a
+
+Let's start by just returning the HEAD and then add requesting the version.
+Alright, I can get the HEAD data. Let's wrap this in a stream. Done!
+
+I also got this running with an arbitrary version. We should handle the case
+where the SHA doesn't exist.
+        
+
+.Thoughts
+Should we hide filepaths from the clients or not? Let's hide them, but have
+the code be ready to switch.
+
+
+3 - Publish PUT events
+~~~~~~~~~~~~~~~~~~~~~~
+To do this properly, I need to understand the PUB/SUB pattern in 0mq. Let's
+see if I can make sense of this. When the conditioning service starts up, it
+should try to pull data right away and condition it. If there's no data there,
+it should subscribe to the raw qplan data broadcast of the snapshot service.
+Alright, it looks like there's a topic filter that we can use. Let's have the
+publisher service running on port 5100. The topics will be "qplan raw",
+"qplan conditioned", and "qplan results".
+
+What should be in the message? Maybe nothing. It may be enough for the
+listeners to pull the HEAD data when they see this. Let's hook something up.
+Done! Pretty awesome! Tomorrow, we'll need to clean this file up.
+
+TODO: We should rename the headers to match this as well.
+TODO: We should have a script that starts everything up
+TODO: We should have commandline params for setting the working directories
+TODO: Clean up implementation of sectionize.py (make it more like the lua
+version)
+TODO: Make the client script more generic (allow us to publish with a specific
+heading)
+
+
+More thoughts
+-------------
+The snapshot service should just handle snapshots. It shouldn't process data
+at all. The flow for raw data to results should be:
+
+        . Someone makes a PUT request to the snapshot service with raw data
+        . The snapshot service checks it in and then publishes this event
+        . Subscribers react to this event. One of them is the conditioning
+          script.
+        . When the conditioning script is done, it makes a PUT request to the
+          snapshot service.
+        . The snapshot service checks this in and then publishes the event.
+        . The application filter reacts to the event by pulling the
+          conditioned data and generating results, which it PUTs to the
+          snapshot server.
+
+The snapshot service needs to be fairly simple and generic. It should do the
+following:
+
+        - Handle PUT requests, hiding file path from clients
+        - Publish PUT events
+        - Handle GET requests
+
+As we customize a snapshot service for other cases, the main thing will be to
+define the type of data being stored and where it goes. We should structure
+the snapshot service this way right now.

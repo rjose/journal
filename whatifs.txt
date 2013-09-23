@@ -71,3 +71,16 @@ the original input along with the change set into qplan and have it generate a
 new qplan state. This state would have to be comitted into git. This would
 happen in the context of a web request. The response should be the new state.
 The browser should store the new state, the base state, and the changeset.
+
+.Git as functional database
+I wonder if we should have cron jobs cat stream data into git and then have
+something like gitcat be able to combine data into streams that can be sent to
+other filters. This would be a nice stream synchronization mechanism. Plus, you'd
+have automatic timestamping. I'll have to think about this some more.
+
+Is it a mistake to have the gcat streams come back together? Should that
+happen after a collection and archive step? Probably. I think the spreadsheet
+and JIRA board/sprint keys should be part of the database. The data must not
+be on github. This should be its own, local repo.
+
+NOTE: Prototype for this is in ~/data/q4

@@ -1,0 +1,10 @@
+JIRA Interop
+============
+Rino Jose <@rjose>
+
+The other main data source I need to pull from is JIRA. This is where I can get
+a sense of the status of every sprint. Let's see if I can get the API to work.
+The first thing I need to do is get the JIRA client.
+
+Alright, I can auth into JIRA and pull a specific issue. Let's see if I can
+get a Greenhopper board.
