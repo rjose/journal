@@ -1,0 +1,35 @@
+ZeroMQ QPlan System
+===================
+Rino Jose <@rjose>
+
+I want to set up a system that automatically pulls data, snapshots it, and
+transforms it. The Web server should pull from the snapshot service directly
+via 0mq.
+
+What's the first step? Let's create our q4 repo. This will hold both our
+scripts and the snapshots. We'll set up the snapshot service first and then
+get some raw data in. Let's write a script that pulls spreadsheet data
+(eventually it will do this regularly). Alright, I have a script that pulls
+raw data and snapshots it.
+
+Let's add a script that listens for changes and conditions the data. I think
+this script should also listen for its own conditioned data being published to
+get raw data as well. Actually, we'd need two different threads for this. I
+guess it could work, but let's just have another process for this.
+
+OK, I can pull raw data, publish it and then have it be automatically
+conditioned. Let's add a little bit of exception handling to the
+condition_raw_data call so we don't try to commit the file if something went
+wrong. Done.
+
+Alright, the next step is hooking up the qplan filter itself. We'll have
+python do this via popen. We should use pull_raw as an example here. Alright,
+got the processing to work. Let's stick this into a loop and then trigger
+everything with a pull raw.
+
+TODO: Clean up qplan scripts (esp construction of PUT messages)
+
+TODO: Read port and host info from file
+TODO: Log errors to disk
+TODO: Figure out if we need to close string IO objects
+TODO: Clean up uses of StringIO

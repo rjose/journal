@@ -1,0 +1,41 @@
+Sep 24, 2013
+============
+Rino Jose <@rjose>
+
+Alright, so what do I want to do today? I want to clean up the snapshot
+service and have it be easily configurable (i.e., easy to map resource headers
+to files). I also want to set up a 0mq-based system that can automatically
+update conditioned data and real data whenever the raw data changes. Need to
+do error handling here as well. I should also figure out how to use the SHA
+with the snapshot service. This should be communicated to the browser somehow
+and used in "what if" scenarios. I bet I can do the stuff above pretty
+quickly. Let's quickly sketch out more stuff.
+
+Once the structure is set up, I should be able to pull data for other
+applications (like the rampline app). That might be an interesting exercise. I
+also want to think about how to integrate snapshots and "what ifs" into all
+apps in a generic fashion.
+
+Main items:
+
+        - [X] Clean up snapshot service
+        - Hook up 0mq-based qplan system
+                - [X] Needs to handle errors
+                - Needs to be easily started and stopped from a single script
+        - Use snapshot SHA in web app
+
+More items:
+
+        - Prototype rampline app and pull data from qplan snapshot service
+        - Sketch out thoughts on integrating snapshots and "what ifs" into all
+          apps
+        - I should really clean up the sectionize.py file to make it more like
+          the lua version
+        - I should get the 0mq lua bindings to work
+
+OK, I got the data flow to work through 0mq. Tomorrow, I really need to clean
+up the python scripts that do this. After that, I'll hook up the web server
+(via lua). Oh, and I also want to read config info from file (but I'll see
+that as I'm cleaning up). OK, got lua-zmq installed and was able to retrieve
+the qplan app data from the snapshot service. I think we're ready to integrate
+this into the web app.

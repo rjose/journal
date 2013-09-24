@@ -12,10 +12,10 @@ Alright, I installed zmq for python2.6. The simple server/client demo work.
 
 Implementation
 --------------
-. cat raw data into a snapshot message [X][X][][]
-. Get raw data at HEAD and SHA [X][X][][]
-. Publish PUT events
-. Clean up functions
+. [X] cat raw data into a snapshot message [X][X][][]
+. [X] Get raw data at HEAD and SHA [X][X][][]
+. [X] Publish PUT events
+. [X] Clean up functions [X][X][X][X][]
 
 
 1 - cat raw data into a snapshot message
@@ -77,14 +77,26 @@ What should be in the message? Maybe nothing. It may be enough for the
 listeners to pull the HEAD data when they see this. Let's hook something up.
 Done! Pretty awesome! Tomorrow, we'll need to clean this file up.
 
-TODO: We should rename the headers to match this as well.
+4 - Clean up functions
+~~~~~~~~~~~~~~~~~~~~~~
+Let's rename server.py to snapshot.py and check in. After that, we'll pull
+functions up into the top part of the file. If it makes sense to pull these
+functions out into separate files, we'll do that too. OK, I have an event loop
+that's printing when we get a PUT event. Let's hook up the committing of this
+file next. I'll assume that the repo has already been initialized.
+
+OK, I'm able to put a resource generically to git. Next up is getting the data
+generically. Done! Let's check this in and then see if we should make this
+into an object. OK, this is now a class. Let's check this in and then pull the
+custom parts out. Done!
+
+I was about to add commandline args, but maybe I'll wait until I need this.
+Let's wrap this up by adding some documentation. Done!
+
+
 TODO: We should have a script that starts everything up
-TODO: We should have commandline params for setting the working directories
 TODO: Clean up implementation of sectionize.py (make it more like the lua
 version)
-TODO: Make the client script more generic (allow us to publish with a specific
-heading)
-
 
 More thoughts
 -------------
