@@ -2,6 +2,8 @@ ZeroMQ QPlan System
 ===================
 Rino Jose <@rjose>
 
+Sep 24, 2013
+------------
 I want to set up a system that automatically pulls data, snapshots it, and
 transforms it. The Web server should pull from the snapshot service directly
 via 0mq.
@@ -27,9 +29,71 @@ python do this via popen. We should use pull_raw as an example here. Alright,
 got the processing to work. Let's stick this into a loop and then trigger
 everything with a pull raw.
 
-TODO: Clean up qplan scripts (esp construction of PUT messages)
+Sep 25, 2013
+------------
 
-TODO: Read port and host info from file
-TODO: Log errors to disk
-TODO: Figure out if we need to close string IO objects
-TODO: Clean up uses of StringIO
+Clean up q4 data pipeline
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Let's start by moving the configuration of the files to a "config.ini" file.
+Done for pull_raw. OK, let's clean up condition_service.py next. We'll do the
+same things are before. Alright, the condition script is done. Let's check
+this in. Next up is the qplan_service.py file. Done! I also cleaned up our use
+of StringIO files so we close them when done. The last bit of cleanup I want
+to do before we move onto hooking up the web server to this is to move the
+data into a data subdir. Done!
+
+Actually, lookoing at the snapshot service file, I wonder if we can move the
+params into the config file. Done!
+
+
+Hook up web server to 0mq
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Let's start by having the qplan web server get its data from the snapshot
+service. Once that works, I'll subscribe to changes in the app data. Hmmm...I
+think I'll need to update the catserve portion to support listening for app
+data changes. I don't think this use case is enough to motivate this. The main
+one is supporting "what ifs". This should be the one we need to handle first.
+
+In a way, it seems that the server code should be in the q4mobile directory.
+It seems that we should be able to simplify this enormously if we do this. The
+lua modules should go into a general place. Is there a way to run lua in its
+own thread? No, I think this is the wrong way to do this. We should have
+another service ping the web server when the app data changes. The main change
+we should make to the web server right now is to pull data from the snapshot
+service. We should do something with the SHA, too.
+
+Alright, I can pull data on startup from the snapshot service. Let's see if we
+can hook this up to the web app. Done! Alright, I think we're in a position to
+totally clean up the qplan code. Let's pull what we need into the data dir
+with the expectation that we'll make this into a repo and pull it in as a
+subtree. I'll call this directory "server" and start pulling stuff over from
+qplan. The files in public should all come over. From the app directory, we
+need init.lua, websocket.lua, and qplan_parser.lua. We'll pull more over as
+needed, but the intent is to keep everything pretty tight.
+
+OK, got things to the point where the server is listening. Let's add the route
+for the user next. Alright, I have and update route defined. Let's move the
+code to pull the latest data over. Alright, it was a little painful trying to
+figure out how to manage the zmq socket in lua, but it seems to be working
+now. I'm going to check the code in for now and then move it to a separate
+repo later.
+
+I used a python script to run all of the services. It worked pretty
+beautifully.
+
+Action Items
+~~~~~~~~~~~~
+TODO: Write a script to start the web server
+TODO: Have the webserver read the port to run on
+TODO: Combine router and app router
+
+TODO: Move the index table construction into QPlanParser.
+TODO: Get repos and subtrees set up and then check out some brand new code
+TODO: Store the data SHA someplace
+
+TODO: Create repo for python modules (esp snapshot) and move everything into
+there
+TODO: Pull qplan code into repos that can be recombined as needed
+TODO: Document snapshot.py
+
+TODO: Log errors to disk -- see if we can get syslog working
