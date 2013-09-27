@@ -81,19 +81,71 @@ repo later.
 I used a python script to run all of the services. It worked pretty
 beautifully.
 
+
+Sep 26, 2013
+------------
+Alright, let's start by having a python script start our web server. Done!
+Let's check this in. Next up is reading the ini file from lua. Let's see if
+there's a module for this. Alright, I found a simple one. Let's hook this
+up...there were a couple of bugs in the inifile code, but I fixed them (at
+least the ones I was running into). Let's check in.
+
+OK, let's do some cleanup on the router code. I want to combine router and
+app_router. First, let's move some functions around. Done. I also tucked the
+data version into the qplan object. We'll send this to the client momentarily.
+Let's check in.
+
+Now, let's do some router clean up. I'll rearrange the router functions first
+and then bring the app_router functions over one-by-one. Done!
+
+Alright, let's see if we can make our routes clearer. Done!
+
+Reorganize repos
+~~~~~~~~~~~~~~~~
+OK, now we'll organize our repos at a higher level. We should identify each of
+the individual repos first. After that, we can start organizing them a bit.
+I'll do the qplan work for this in the v7_branch.
+
+Here's what's in the q4mobile directory right now:
+
+        - server
+        - data
+        - scripts
+
+The server part should be its own repo. This should be qplan proper. One of
+the subtrees should be the stuff in lua_modules. Right now, these are generic
+enough to be a single repo. What about the python modules? These should be
+their own repo that should be installed in some location for production use.
+Where should Haskell go? Haskell is qplan specific, but there are pieces that
+are generic.
+
+Alright, let's start by creating a lua_modules repo. Actually, I already have
+one. Let's check it out, tag it, and then reinvent it. Done. Now, let's create
+a qplan_server repo and then move code to it (including the lua_modules
+subtree). Alright, I created a qplan_server repo and added it as a subtree to
+q4mobile. I also created python_modules and checked them out into my home dir.
+
+OK, let's take a torch to the qplan repo next. I'll do this in v7_branch.
+Next, let's update the README.md file to describe how this works.
+
+Once we get a single update, I'll move the q4mobile code to gitli, check it
+out to a "production" directory and point it to 8000. Done!
+
+
+
+Thoughts
+~~~~~~~~
+When I start moving repos around, I want to start with nothing and make sure
+we can get things moving. Also, I want to do all the subtrees in the right
+places.
+
 Action Items
 ~~~~~~~~~~~~
-TODO: Write a script to start the web server
-TODO: Have the webserver read the port to run on
-TODO: Combine router and app router
-
-TODO: Move the index table construction into QPlanParser.
-TODO: Get repos and subtrees set up and then check out some brand new code
 TODO: Store the data SHA someplace
 
-TODO: Create repo for python modules (esp snapshot) and move everything into
-there
-TODO: Pull qplan code into repos that can be recombined as needed
 TODO: Document snapshot.py
 
 TODO: Log errors to disk -- see if we can get syslog working
+
+TODO: Update stream spec
+TODO: Fix the unit tests
