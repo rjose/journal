@@ -1,0 +1,54 @@
+Oct 7, 2013
+===========
+Rino Jose <@rjose>
+
+Let's look into why the Conversation track has DNF items. How should I proceed?
+First, let's grab the latest conditioned data. We can read this into the qplan
+test function. Second, let's narrow things down to the Conversation track. We'll
+go from there.
+
+Hmmm...looks like there's a problem with parsing prereqs. Let's take a closer
+look. OK, it looks like the track staff availability when there aren't any
+people in a skill set is the empty list. I think it should be a list of
+zeroes. Let's see what's happening here.
+
+Still don't see it. Let's add some tests to squeeze this out. OK, found it --
+I wasn't filtering the schedule availability for the specified skills. I
+didn't use tests, though. I commented out everything from the end up to the
+function call I was interested in. Then I commented out the signature and just
+returned what was of interest. I saw that I wasn't filtering the required
+skills properly. This seems to be a danger of the functional approach -- you
+really have to know what the arrays you're working on mean.
+
+Reorganize files
+----------------
+I want to pull the snapshot and conditioning files into one repo. This should
+be something that can be updated over time. In other words, there shouldn't be
+a q4 directory, and a q1 directory -- there should just be mobile and all of
+the weirdness that's customized about it. The same customizations will apply
+to all applications. We'll have a single run script start everything up. Let's
+start with this. Not sure what to do about the qplan and rampline filters. Any
+significant changes should be handled by these scripts using the data that's
+piped into them.
+
+Some questions:
+
+        * Should we have a single raw stream that all apps use?
+        * How do we handle next quarter planning along with the previous
+          quarter?
+        * Perhaps, we should have multiple files for each input data. For
+          instance, we might have one file each for the work list, vacation
+          list, and staff assignments. The scripts will know which ones they
+          need.
+
+OK, I think this scheme works best. We'll have data sources that we'll pull
+from regularly. Each source will be its own file in our repo. Whenever we
+condition data, that will also be another file in the repo. Whenever we
+generate new result data, that will be another file still.
+
+So that means we'll need to change how we pull data a little. Let's set up a
+new snapshot server and change our config file format to support this.
+
+TODO: Reorganize all files
+
+# Native, Apps, Web, QA

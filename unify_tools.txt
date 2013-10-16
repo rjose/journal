@@ -1,0 +1,161 @@
+Unify Tools
+===========
+Rino Jose <@rjose>
+
+All of our tools should work off of the same data. Conditioning scripts will
+combine raw data in different ways, but it should all be snapshotted in one
+place.
+
+Implementation
+--------------
+. [X] Snapshot all raw data [X][]
+. [X] Condition qplan data [X][X][X]<X><X><X>
+. [X] Condition rampline data [X][][]
+. [X] Construct qplan and rampline app data [X][][]
+. [X] Combine qplan and rampline into a single web app [X][X][][][]
+. [X] Add Vacationator [X][X][X][X][][][]
+
+
+1 - Snapshot all raw data
+~~~~~~~~~~~~~~~~~~~~~~~~~
+I have one case snapshotted. Before we go on, I want to at least pull it from
+a conditioning script. Let's do that now. Done. OK, let's take snapshots of
+all of the data now. Done! Let's check in.
+
+
+2 - Condition qplan data
+~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, what do we need to do here? Let's move all of our common
+track/skill/etc conditioning scripts to common.py. We'll move the pulling of
+raw data into its own function. Each stream will be passed into a function
+that returns something appropriate. We'll start with the vacation stream.
+Alright, I have a pattern for printing the stream lines out. Let's finish up
+the rest of the streams and then check in. OK, let's check in. After this,
+we'll pull more functions into common. We've done everything except pull the
+print_work_lines function over. Let's check in and figure out how to do this.
+
+Next up is moving any data that's shared between qplan and rampline over to
+common. Done. Let's check in and then subscribe to the other change events.
+Done!
+
+
+3 - Condition rampline data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, next up is conditioning the rampline data. I've done some of this in
+the previous step as part of pulling the common work pieces out. This should
+be pretty easy. I have the new pieces in condition_rampline_service. Let's
+bring the rest of the file over. Done! Let's check in and then move on.
+
+4 - Construct qplan and rampline app data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+We'll start by copying the qplan script over and hooking it up to the qplan
+condition event. Looks good. Let's check this in. OK, the rampline data has
+been converted as well. Done!
+
+
+5 - Combine qplan and rampline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Alright, let's pull qplan and rampline together. I'll bring qplan over first
+and then note what has to be brought over carefully from rampline. OK, I got
+qplan running through this new setup. Let's check in and then revise to serve
+the data from different files. OK, I can serve qplan from qplan.html. Let's
+add rampline. OK, I'm serving the rampline file now. Let's get the data hooked
+up. Done! Let's check in.
+
+
+6 - Add Vacationator
+~~~~~~~~~~~~~~~~~~~~
+This is just a quick view to see who's on vacation. I want this to be
+something people can use for sprint planning, or just to check when people
+will be here. I already have vacation data -- I just need to figure out how to
+present it. Let's see if I can display rows of squares. OK, I just created
+another table. Here's what I'll do tomorrow:
+
+        * Add track selector
+        * Pull data for the next 4 weeks
+        * A python script should do to arrange the data. Let's do this as a
+          first cut.
+
+.Oct 9, 2013
+Let's start by creating a new vacationator controller and mocking out data. I
+think what I want to do is to have the vacation filter be written in Haskell
+like the others and arrange the common code into something I install with
+cabal.
+
+Each request should have enough info to render on reload. What should the URL
+scheme be? How about vacation.html/#track=All. Alright, I have the URL hooked
+up. Let's add some mock data. OK, the mock data is in place. Let's check this
+in and then add the track selector. Done (still needs styling, but it's hooked
+up). Let's check in.
+
+Alright, let's swing back to the data side to condition the raw data. What do
+we need? I think we just need raw vacation and staff streams. OK, I think I
+need to think about what I'm doing. The first thing we should extract are the
+team holidays. These are evertyhing with "All" as the name. There may be
+different types of holidays (in days, events, etc.). We need to expand the
+dates and filter based on the start and end dates. What I want out is
+something like this:
+
+        =====params
+                Oct 9, 2013     Oct 29, 2013
+
+        =====staff
+                Aarthi Jayaram  Contacts
+                Ethan Goldblum  Conversations
+
+        =====outdays
+                All             holiday   Nov 29, 2013
+                All             holiday   Dec 25, 2013:Dec 26, 2013:Dec 27, 2013
+                All             inday     Nov 7, 2013
+                All             event     Oct 11, 2013
+                Aarthi Jayaram  out       Nov 25, 2013:Nov 26, 2013:Nov 27, 2013
+                Ethan Goldblum  oncall    Oct 9, 2013:Oct 10, 2013:Oct 11, 2013
+
+A couple of notes:
+
+        * There will be separate lines for each type of vacation
+        * The dates will be constrained to the start and end dates of the
+          range
+
+For the app data, we'll want something like this:
+
+        =====dates
+                Oct     9     Wed     false
+                Oct     10    Thu     false
+                Oct     11    Fri     false
+                Oct     12    Sat     true
+
+        =====tracks
+                All
+                Contacts
+                Conversation
+
+        =====outdays
+                =====track
+                        Aarthi Jayarami  :::out::weekend:weekend
+                        Ethan Goldblum   ::oncall:oncall:oncall:weekend:weekend
+
+OK, I was able to get this output. Let's check in what we have. The next step
+is filtering out the dates that aren't in range. Done!
+
+The next step is converting the conditioned data into app data. Let's do this
+in python first since I think it'll be quicker. We should check in the
+conditioned data first. Done.
+
+Alright, let's output dates first. Done. Also got tracks output. Last is
+getting outdays output. Done! OK, I ran into a weird bug with Python where I
+had a reference to a hash instead of a copy. Ugh. Anyways, vacationator app
+data is now rendered. The next step is to add the vacationator parser.
+
+Let's see how fast I can do this. OK, got the days to come over...Now I got
+the tracks to come over. Last up is staff. Got it rendered. Let's handle inday
+styling and then hook up the tracks. OK, the tracks are hooked up. Let's check
+in and then try extending the dates through 90 days. That's too hard to look
+at.
+
+TODO: Add updating of web app when data changes
+TODO: Document sections in file
+TODO: When we bring the python modules over, make sure we commit our changes
+to them (snapshot service fixes, etc.)
+TODO: Change our ports
+TODO: Think about adding a homepage

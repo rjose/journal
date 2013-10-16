@@ -1,0 +1,74 @@
+Oct 14, 2013
+============
+Rino Jose <@rjose>
+
+Alright, let's start by hooking up our status run script so that rampline and
+vacationator run continuously (at some point, we'll need to mark items as done
+so we can indicate that on rampline).
+
+TODO: Change mobile-planning to mobile-tracking
+TODO: Also add a mobile-planning app
+
+Status App
+----------
+The rampline info needs to be pulled from the planning spreadsheet, the status
+spreadsheet, and JIRA. We'll be able to compute several types of dates:
+
+        * End of sprint date
+        * Date based on planning estimates
+        * Date based on JIRA estimates
+        * Date based on manager estimate
+
+We'll need to tie JIRA items back to the spreadsheet items. This can either go
+into the planning spreadsheet or the status spreadsheet. Maybe the status
+spreadsheet would be easier. I need effort left estimates for each item. I
+need to figure out how to capture dependencies between tasks. This should be
+part of JIRA. I think for the implementation, we can have filters for each
+type of date. We should store all dates in each item. This will be a different
+kind of scheduling algorithm.
+
+Clean up products
+-----------------
+Let's start pulling code into appropriate spots. Here's what we need to do:
+
+        * Rename mobile-planning to mobile-tracking (do this on Tue Oct 15)
+        * Create a new mobile-planning repo
+        * Check in the changes to python_modules
+        * Create a haskell_modules repo
+        * Figure out what needs to be in gitli and what can be in github
+
+We want to split planning and tracking into different servers. Actually, we'll
+probably want an analysis app as well.
+
+python_modules, haskell_modules, and tracking_server can be separate repos.
+
+Making python_modules into subtree
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OK, here's what we'll do:
+
+        . git remote add python_modules_remote git@github.com:rjose/python_modules.git
+        . git fetch python_modules_remote
+        . git checkout -b python_modules python_modules_remote/master
+        . git checkout master
+        . git read-tree --prefix=python_modules/ -u python_modules
+        . git commit
+
+After this, we should overlay our own changes and then push them back. Done.
+Alright, what's next? Can I rename the gitli repo to mobile-tracking and
+recheck out? Let's try.
+
+OK, let's strip out all the planning stuff from mobile-tracking and then
+create a mobile-planning app that has qplan in it. Done!
+
+After this, let's create a tracking_server and a planning_server. These can go
+onto github.
+
+After this, I want to create a haskell_modules library that can build qplan
+and rampline. The haskell modules should be added as subtrees in the planning
+and tracking repos.
+
+OK, I'm almost done with mobile_plan. I still need to customize some of the
+fields. Let's do the same with track_server and mobile_track and then we
+should be done for today.
+
+TODO: Have mobile-specific items in plan_server be customized

@@ -1,0 +1,7 @@
+Oct 1, 2013
+===========
+Rino Jose <@rjose>
+
+We're about to switch over to using the new staff spreadsheet. Let's make sure
+I can parse it. I'll push changes from q4mobile to the gitli repo, then pull
+it down and branch to handle the new spreadsheet.
